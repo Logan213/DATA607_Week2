@@ -1,0 +1,65 @@
+---
+title: "DATA_607_Week_2"
+author: "Logan Thomson"
+date: "February 6, 2016"
+output: html_document
+---
+
+### **Reading Data**
+For this assignment, I have chosen the `wine` data set from the UCI Machine Learning Repository, and uploaded it to my GitHub account. I will host the data from there, and use the following code to read the data into R:  
+
+```{r}
+library(RCurl)
+x <- getURL("https://raw.githubusercontent.com/Logan213/DATA607_Week2/master/wine.data.txt")
+wine <- read.csv(text = x)
+```
+
+### **Creating a Data Frame**  
+
+By usine the `data.frame` function, we can create a data frame in R to manipulate our data a little easier:  
+```{r}
+wine_df <- data.frame(wine)
+```
+
+#### **Renaming Columns**
+
+Now that we have our `wine_df` object, we can take a look at the column names and the first few rows of the data by using  
+```{r}
+head(wine_df)
+```
+
+The column headers are not very descriptive, but the source URL has an description of each variable in the `wine` data set. We can rename the columns by creating a vector of combined values:  
+```{r}
+wine_cols <- c("X1"="Class ID", "X14.23"="Alcohol", "X1.71"="Malic Acid", "X2.43"="Ash", "X15.6"="Alcalinity", "X127"="Magnesium", "X2.8"="Total Phenols", "X3.06"="Flavanoids", "X.28"="Nonflavanoid Phenols", "X2.29"="Proanthocyanins", "X5.64"="Color Intensity", "X1.04"="Hue", "X3.92"="OD280/OD315", "X1065"="Proline")
+```
+
+Then, applying this to the data frame using the `rename` function fromt the `plyr` package:
+```{r}
+library(plyr)
+wine_df <- rename(wine_df, wine_cols)
+```
+
+We can then see our `wine_df` object with new column headers:
+```{r}
+head(wine_df)
+```
+
+### **Subsetting Columns & Rows**
+
+#### **Subsetting Columns**
+
+I'm not interested in some of the variables, so we can select just the ones we want using the following:  
+```{r}
+wine_sub <- wine_df[, c(2:7, 11:12)]
+head(wine_sub)
+```
+This will create a new data frame called `wine_sub` made up of all rows (note there is nothing before the comma in the brackets in the code above) and columns 2 through 7, and columns 11 and 12 only.  
+
+#### **Subsetting Rows**
+
+Lastly, we could have specified rows in the brackets above, but I want to subset the data that meets certain parameters:
+```{r}
+wine_sub.2 <- subset(wine_sub, Alcohol >12)
+head(wine_sub.2)
+```
+This gives us a new data frame with the columns indicated above, but only rows where the Alcohol value is over 12.
